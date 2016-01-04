@@ -77,7 +77,7 @@ func runSync(cmd *Command, args []string) {
 		var importPath, expectedRevision = fields[0], truncate(fields[1])
 		var ch = make(chan string)
 		chans = append(chans, ch)
-		go syncPkg(ch, importPath, expectedRevision)
+		syncPkg(ch, importPath, expectedRevision)
 	}
 	if scanner.Err() != nil {
 		perror(scanner.Err())
