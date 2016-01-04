@@ -77,15 +77,17 @@ func runSync(cmd *Command, args []string) {
 		var importPath, expectedRevision = fields[0], truncate(fields[1])
 		var ch = make(chan string)
 		chans = append(chans, ch)
+		fmt.Printf("Syncing %s %s\r\n", importPath, expectedRevision)
 		syncPkg(ch, importPath, expectedRevision)
 	}
 	if scanner.Err() != nil {
 		perror(scanner.Err())
 	}
-
-	for _, ch := range chans {
-		fmt.Print(<-ch)
-	}
+	/*
+		for _, ch := range chans {
+			fmt.Print(<-ch)
+		}
+	*/
 
 	// Install the commands.
 	for _, cmd := range cmds {
