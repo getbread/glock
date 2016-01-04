@@ -78,7 +78,7 @@ func runSync(cmd *Command, args []string) {
 		var ch = make(chan string)
 		chans = append(chans, ch)
 		fmt.Printf("Syncing %s %s\r\n", importPath, expectedRevision)
-		syncPkg(ch, importPath, expectedRevision)
+		fmt.Println(syncPkg(importPath, expectedRevision))
 	}
 	if scanner.Err() != nil {
 		perror(scanner.Err())
@@ -117,10 +117,13 @@ func truncate(rev string) string {
 	return rev
 }
 
-func syncPkg(ch chan<- string, importPath, expectedRevision string) {
+func syncPkg(importPath, expectedRevision string) (statusString string) {
 	var importDir = filepath.Join(gopath(), "src", importPath)
 	var status bytes.Buffer
-	defer func() { ch <- status.String() }()
+	defer func() {
+		statusString = status.String()
+		return
+	}()
 
 	// Try to find the repo.
 	var getOutput []byte
@@ -179,4 +182,5 @@ func syncPkg(ch chan<- string, importPath, expectedRevision string) {
 	if err != nil {
 		perror(err)
 	}
+	return
 }
